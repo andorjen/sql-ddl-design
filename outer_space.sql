@@ -1,6 +1,6 @@
   
  CREATE TABLE stars(
-      name VARCHAR(100) PRIMARY KEY,
+      name VARCHAR(100) PRIMARY KEY, 
       star_temp_k INT NOT NULL
   );
 
@@ -9,8 +9,8 @@ VALUES('The Sun', 5800), ('Proxima Centauri', 3042), ('Gliese 876', 3192);
 
  CREATE TABLE planets(
       name VARCHAR(100) PRIMARY KEY,
-      orbit_star TEXT NOT NULL REFERENCES stars,
-      orbital_period_yrs NUMERIC(10,3) NOT NULL 
+      orbit_star VARCHAR(100) NOT NULL REFERENCES stars,
+      orbital_period_yrs FLOAT NOT NULL 
   ); 
 INSERT INTO planets(name, orbit_star, orbital_period_yrs)
 VALUES('Earth','The Sun', 1.00), ('Mars','The Sun',1.882), 
@@ -19,21 +19,21 @@ VALUES('Earth','The Sun', 1.00), ('Mars','The Sun',1.882),
 
   CREATE TABLE moons(
       name VARCHAR(100) PRIMARY KEY,
-      orbit_planet TEXT NOT NULL REFERENCES planets
+      orbit_planet VARCHAR(100) NOT NULL REFERENCES planets
   );
 
 INSERT INTO moons(name, orbit_planet)
 VALUES('The Moon', 'Earth'), ('Phobos', 'Mars'), ('Deimos', 'Mars');
 
 
-SELECT planets.name, stars.name, COUNT(moons)
-FROM planets
-LEFT JOIN stars
-ON planets.orbit_star = stars.name
-LEFT JOIN moons
-ON moons.orbit_planet = planets.name
-GROUP BY planets.name, stars.name
-ORDER BY planets.name;
+SELECT p.name, s.name, COUNT(m)
+FROM planets as p
+LEFT JOIN stars as s
+ON p.orbit_star = s.name
+LEFT JOIN moons as m
+ON m.orbit_planet = p.name
+GROUP BY p.name, s.name
+ORDER BY p.name;
 
 SELECT planets.name, stars.name, COUNT(moons)
 FROM moons
